@@ -75,7 +75,7 @@ class RefundTable:
             Returns:
                 set: 変換後セット
         """
-        l_si = re.findall('\d+', x)
+        l_si = re.findall(r'\d+', x)
         l_si_i = [int(s) for s in l_si]
         return set(l_si_i)
 

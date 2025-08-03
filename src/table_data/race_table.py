@@ -100,9 +100,9 @@ class RaceTable:
                         raise TimeoutException(msg)
                         
                     data = BeautifulSoup(driver.page_source, 'html.parser')
-                    data = data.encode('cp932', "ignore")
+                    encoded = str(data).encode('cp932', "ignore")
                     with open(result_db_file, "wb") as f:
-                        f.write(data)
+                        f.write(encoded)
 
                 # ディレクトリ作成
                 result_path = f'./html/race_result/{race_id[:4]}'
@@ -140,9 +140,9 @@ class RaceTable:
                         raise TimeoutException(msg)
                         
                     data = BeautifulSoup(driver.page_source, 'html.parser')
-                    data = data.encode('cp932', "ignore")
+                    encoded = str(data).encode('cp932', "ignore")
                     with open(result_file, "wb") as f:
-                        f.write(data)
+                        f.write(encoded)
 
                 cnt += 1
             #存在しないrace_idを飛ばす
@@ -192,11 +192,11 @@ class RaceTable:
                 if col_name in dic_data:
                     dic_data[col_name].append(tds[col_index].text.replace('\n', '').replace(' ', ''))
                     if tds[col_index].find('a') and col_name not in ['調教ﾀｲﾑ', '厩舎ｺﾒﾝﾄ']:
-                        dic_data[col_name + '_ID'].append(re.findall('\d+', tds[col_index].find('a').get('href'))[0])
+                        dic_data[col_name + '_ID'].append(re.findall(r'\d+', tds[col_index].find('a').get('href'))[0])
                 else:
                     dic_data[col_name] = [tds[col_index].text.replace('\n', '').replace(' ', '')]
                     if tds[col_index].find('a') and col_name not in ['調教ﾀｲﾑ', '厩舎ｺﾒﾝﾄ']:
-                        dic_data[col_name + '_ID'] = [re.findall('\d+', tds[col_index].find('a').get('href'))[0]]
+                        dic_data[col_name + '_ID'] = [re.findall(r'\d+', tds[col_index].find('a').get('href'))[0]]
         
         return dic_data
     
@@ -248,7 +248,7 @@ class RaceTable:
             th = tr.find('th')
             if th and '馬場指数' in th.text:
                 td = tr.find('td')
-                return re.findall('\d+', td.text.replace('\n', '').replace(' ', ''))[0]
+                return re.findall(r'\d+', td.text.replace(r'\n', '').replace(' ', ''))[0]
         return None
 
     @staticmethod

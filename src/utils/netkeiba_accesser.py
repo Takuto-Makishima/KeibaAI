@@ -6,8 +6,8 @@ from selenium.webdriver import Edge
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
-
 from src.utils.notification import Notification
+
 
 class NetKeibaAccesser:
     """ ネット競馬アクセス """
