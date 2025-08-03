@@ -69,9 +69,9 @@ class RaceId:
 
             # html 保存
             data = BeautifulSoup(driver.page_source, 'html.parser')
-            data = data.encode('cp932', "ignore")
+            encoded = str(data).encode('cp932', "ignore")
             with open(f'{dir_path}/{date}.bin', "wb") as f:
-                f.write(data)
+                f.write(encoded)
 
     @staticmethod
     def create_data(start_year: int, end_year: int) -> None:

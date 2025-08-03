@@ -85,9 +85,9 @@ class TrainingTable:
                     raise TimeoutException(msg)
 
                 data = BeautifulSoup(driver.page_source, 'html.parser')
-                data = data.encode('cp932', "ignore")
+                encoded = str(data).encode('cp932', "ignore")
                 with open(file_path, "wb") as f:
-                    f.write(data)
+                    f.write(encoded)
             #存在しないrace_idを飛ばす
             except IndexError:
                 print(f'IndexError {race_id}')
@@ -145,7 +145,7 @@ class TrainingTable:
                         if col_name == '印':
                             continue
                         if col_name == '馬名':
-                            name = tds[col_index].find(href=re.compile("https://db.netkeiba.com/horse/\d"))
+                            name = tds[col_index].find(href=re.compile(r"https://db.netkeiba.com/horse/\d"))
                             ids = re.findall('[0-9]+', str(name))
                             if col_name in dic_data:
                                 dic_data[col_name].append(name.get_text(strip=True))

@@ -35,7 +35,7 @@ class PedigreeTable:
         """
         year = str(days[0].year)
         race_table = pl.read_parquet(PathManager.get_html_race_table(year, False))
-        horse_ids = race_table['馬名_ID'].unique(maintain_order=True)
+        horse_ids = race_table['馬名_ID'].unique(maintain_order=True).to_series()
 
         # ホースIDループ
         for horse_id in tqdm(horse_ids):
@@ -64,9 +64,9 @@ class PedigreeTable:
                     raise TimeoutException(msg)
 
                 data = BeautifulSoup(driver.page_source, 'html.parser')
-                data = data.encode('cp932', "ignore")
+                encoded = str(data).encode('cp932', "ignore")
                 with open(pedigree_file_path, "wb") as f:
-                    f.write(data)
+                    f.write(encoded)
 
             #存在しないrace_idを飛ばす
             except IndexError:
@@ -119,7 +119,7 @@ class PedigreeTable:
                 cnt = 0
                 dic_ped = {}
                 for td in tds:
-                    name = td.find(href=re.compile("/horse/\d"))
+                    name = td.find(href=re.compile(r"/horse/\d"))
                     ids = re.findall('[0-9a-zA-Z]+', str(name))
                     if cnt == 0:
                         types = td.get_text(',', strip=True).split(',')[-1]

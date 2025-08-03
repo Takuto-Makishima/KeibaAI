@@ -4,7 +4,6 @@ import polars as pl
 from datetime import datetime
 from tqdm import tqdm
 from pathlib import Path
-#from functools import reduce
 import operator
 from src.utils.path_manager import PathManager
 

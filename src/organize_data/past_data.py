@@ -236,7 +236,7 @@ class PastData:
         return today_df
 
     @staticmethod
-    def create_past_data_extra_core(date: datetime, day: datetime, target_df: pl.DataFrame, result_df: pl.DataFrame) -> pl.DataFrame:
+    def create_past_data_extra_core(date: pl.Date, day: pl.Date, target_df: pl.DataFrame, result_df: pl.DataFrame) -> pl.DataFrame:
         """ 過去データを作成するコア関数
             Args:
                 date: 取得日
@@ -249,7 +249,7 @@ class PastData:
         # 該当日のデータ取得
         today_df = target_df.filter(pl.col("日付") == day)
         # 該当日の出走馬ID取得
-        horse_ids = today_df.select("馬名_ID").unique(maintain_order=True)
+        horse_ids = today_df.select("馬名_ID").unique(maintain_order=True).to_series()
         # 出走馬の出走履歴取得
         past_df = result_df.filter(pl.col("馬名_ID").is_in(horse_ids) & (pl.col("日付") < date)).sort("日付", descending=True)
         # レース間隔計算
@@ -384,7 +384,7 @@ class PastData:
         for year in tqdm(range(start, end)):
             # 土日情報取得
             target_df = base_df.filter(pl.col("日付").dt.year() == year)
-            weeks = PastData.get_date_list(target_df["日付"].unique(maintain_order=True))
+            weeks = PastData.get_date_list(target_df["日付"].unique(maintain_order=True).to_list())
             past_df = pl.DataFrame()
             file_path = PathManager.get_past_table_extra(year, False)
             if os.path.isfile(file_path) and not is_new:

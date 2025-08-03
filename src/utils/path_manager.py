@@ -236,11 +236,12 @@ class PathManager:
             return f'./html/models/{str_date}/selected_features/{target}/{race_type}/{place}/{distance}/average_features.pickle'
     
     @staticmethod
-    def get_param_path(start: datetime, end: datetime, target: str, race_type: str, place: str, distance: int) -> str:
+    def get_param_path(start: datetime, end: datetime, objective: str, target: str, race_type: str, place: str, distance: int) -> str:
         """ パラメータのパスを取得する
             Args:
                 start(datetime): 開始日
                 end(datetime): 終了日
+                objective(str): 目的
                 target(str): ターゲット
                 race_type(str): レース種別
                 place(str): 場所
@@ -250,20 +251,21 @@ class PathManager:
         """
         str_date = f'{start.strftime("%Y%m%d")}_{end.strftime("%Y%m%d")}'
         if (distance==0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/hyperparameter.txt'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/hyperparameter.txt'
         elif (distance!=0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{distance}/hyperparameter.txt'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{distance}/hyperparameter.txt'
         elif (distance==0) and (place != ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/hyperparameter.txt'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/hyperparameter.txt'
         else:
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/{distance}/hyperparameter.txt'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/{distance}/hyperparameter.txt'
 
     @staticmethod
-    def get_eval_path(start: datetime, end: datetime, target: str, race_type: str, place: str, distance: int) -> str:
+    def get_eval_path(start: datetime, end: datetime, objective: str, target: str, race_type: str, place: str, distance: int) -> str:
         """ 評価のパスを取得する
             Args:
                 start(datetime): 開始日
                 end(datetime): 終了日
+                objective(str): 目的
                 target(str): ターゲット
                 race_type(str): レース種別
                 place(str): 場所
@@ -273,20 +275,21 @@ class PathManager:
         """
         str_date = f'{start.strftime("%Y%m%d")}_{end.strftime("%Y%m%d")}'
         if (distance==0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/evaluation.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/evaluation.pickle'
         elif (distance!=0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{distance}/evaluation.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{distance}/evaluation.pickle'
         elif (distance==0) and (place != ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/evaluation.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/evaluation.pickle'
         else:
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/{distance}/evaluation.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/{distance}/evaluation.pickle'
 
     @staticmethod
-    def get_model_path(start: datetime, end: datetime, target: str, race_type: str, place: str, distance: int) -> str:
+    def get_model_path(start: datetime, end: datetime, objective: str, target: str, race_type: str, place: str, distance: int) -> str:
         """ モデルのパスを取得する
             Args:
                 start(datetime): 開始日
                 end(datetime): 終了日
+                objective(str): 目的
                 target(str): ターゲット
                 race_type(str): レース種別
                 place(str): 場所
@@ -296,13 +299,13 @@ class PathManager:
         """
         str_date = f'{start.strftime("%Y%m%d")}_{end.strftime("%Y%m%d")}'
         if (distance==0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/model.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/model.pickle'
         elif (distance!=0) and (place == ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{distance}/model.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{distance}/model.pickle'
         elif (distance==0) and (place != ''):
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/model.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/model.pickle'
         else:
-            return f'./html/models/{str_date}/{PathManager.MODEL_TYPE}/{target}/{race_type}/{place}/{distance}/model.pickle'
+            return f'./html/models/{str_date}/{objective}/{target}/{race_type}/{place}/{distance}/model.pickle'
 
     @staticmethod
     def get_median_path(start: datetime, end: datetime, target: str, race_type: str, place: str, distance: int):
