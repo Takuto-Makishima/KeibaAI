@@ -188,7 +188,7 @@ class StaticticsData:
         return target_df
 
     @staticmethod
-    def cal_difference_from_the_standard_value(df: pl.DataFrame) -> None:
+    def cal_difference_from_the_standard_value(df: pl.DataFrame) -> pl.DataFrame:
         """ 指定された列の中央値との差分を計算する
             Args:
                 df: データフレーム

@@ -19,6 +19,7 @@ from src.utils.notification import Notification
 from src.utils.settings import Settings
 from src.creators.dataset import Dataset
 from src.executors.today_data import TodayData
+from src.creators.feature_encoder import FeatureEncoder
 
 
 class AiCreator:
@@ -620,7 +621,7 @@ class AiCreator:
         return model.best_score['Valid']['ndcg@3']
 
     @staticmethod
-    def create_rank_model(df: pd.DataFrame, start: datetime, end: datetime, objective: str, target: str,
+    def create_rank_model_core(df: pd.DataFrame, start: datetime, end: datetime, objective: str, target: str,
                           race_type: str, place: str, distance: int, rate: float=0.2,
                           is_exclusion_new_horse: bool = True, is_pickle: bool = True) -> None:
         """ ランキング学習モデルをOptunaでハイパーパラメータ調整し作成する
@@ -768,7 +769,7 @@ class AiCreator:
                             continue
                         for distance in distances:
                             print(date[0], date[-1], race_type, place, distance)
-                            AiCreator.create_rank_model(learn_df, date[0], date[-1], objective, target_value, race_type, place, distance, rate, is_exclusion_new_horse, is_pickle)
+                            AiCreator.create_rank_model_core(learn_df, date[0], date[-1], objective, target_value, race_type, place, distance, rate, is_exclusion_new_horse, is_pickle)
 
     @staticmethod
     def create_rank_model(days: list, start_year: int, end_year: int, objective: str) -> None:
@@ -790,3 +791,60 @@ class AiCreator:
             Notification.send(f'error: {e}')
         else:
             Notification.send('モデル作成 完了')
+
+    @staticmethod
+    def execute_setrank_transformer_model(start: int, end: int, objective: str, is_pickle: bool, create_days: list, is_exclusion_new_horse:bool=True) -> None:
+        """ AIモデルの作成を実行するメソッド
+            Args:
+                start (int): 開始日
+                end (int): 終了日
+                objective (str): 目的関数
+                is_pickle (bool): pickleを使用するかどうか
+                create_days (list): 作成する日付のリスト
+                is_exclusion_new_horse (bool): 新馬除外フラグ
+            Returns:
+                None
+        """
+        print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        rate=0.2
+        AiCreator.FEATURE_ENCODERS = {}
+        for date in create_days:
+            dataset = Dataset.read_dataset(start, end, is_pickle)
+            for race_type in ['芝', 'ダート']:
+                # データ分割
+                df = dataset[dataset['レースタイプ'] == race_type]
+                if is_exclusion_new_horse:
+                    df = df[df['クラス'] != '新馬クラス']
+                X_train_d, y_train_d, X_valid_d, y_valid_d, X_test_d, y_test_d = Dataset.split_dataset(df, date[0], date[-1], 'order', rate, is_exclusion_new_horse)
+                # 特徴量変換
+                encoder = FeatureEncoder()
+                encoder.convert_features(X_train_d)
+                encoder.convert_features(X_valid_d)
+                if len(X_test_d) > 0:
+                    encoder.convert_features(X_test_d)
+                AiCreator.FEATURE_ENCODERS[race_type] = encoder
+                
+
+    @staticmethod
+    def create_setrank_transformer_model(days: list, start_year: int, end_year: int, objective: str) -> None:
+        """ モデル作成関数
+            Args:
+                days (list): 日付のリスト
+                start_year (int): 開始年
+                end_year (int): 終了年
+                objective (str): 目的関数名
+            Returns:
+                None
+        """
+        # Notification.send('モデル作成 開始')
+        try:
+            print('モデル作成')
+            AiCreator.execute_setrank_transformer_model(start_year, end_year, objective, True, days, True)
+        except Exception as e:
+            print(f'error: {e}')
+            Notification.send(f'error: {e}')
+        else:
+            Notification.send('モデル作成 完了')
+
+
+

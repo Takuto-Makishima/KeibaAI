@@ -58,10 +58,8 @@ class Dataset:
             'レース間隔', '総出走数', '勝利数', '連対数', '複勝数', '馬券外数', 
             '勝率', '連対率', '複勝率', '馬券外率','総出遅れ回数', '総出走回数', '総出遅れ確率'
         ]
-        selected_cols += [
-            '1走前_order', '2走前_order', '3走前_order'
-        ]
-        # selected_cols += [col for col in df.columns if re.match(r"^[123]走前_", col)]
+        # selected_cols += ['1走前_order', '2走前_order', '3走前_order']
+        selected_cols += [col for col in df.columns if re.match(r"^[1-5]走前_", col)]
         # selected_cols += [col for col in df.columns if '近3走' in col]
         # selected_cols += [col for col in df.columns if '3R' in col]
         selected_cols += [col for col in df.columns if 'ランク_' in col]
